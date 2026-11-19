@@ -2,6 +2,9 @@
 
 A full-stack personal finance and expense management platform engineered with **FastAPI**, **React 18**, **TypeScript**, **Tailwind CSS**, and **PostgreSQL**.
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/jaivanthm24-cyber/smart-expense-calculator)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jaivanthm24-cyber/smart-expense-calculator&root-directory=frontend)
+
 ---
 
 ## Key Features
