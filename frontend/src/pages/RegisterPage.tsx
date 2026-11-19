@@ -10,6 +10,7 @@ import { Input } from '@/components/common/Input'
 import { Select } from '@/components/common/Select'
 import { Button } from '@/components/common/Button'
 import { Card } from '@/components/common/Card'
+import { getErrorMessage } from '@/utils/errorHandler'
 
 const registerSchema = z
   .object({
@@ -66,7 +67,7 @@ export const RegisterPage: React.FC = () => {
       login(res.data)
       navigate('/')
     } catch (err: any) {
-      setServerError(err.response?.data?.detail || 'Registration failed. Please try again.')
+      setServerError(getErrorMessage(err, 'Registration failed. Please try again.'))
     } finally {
       setIsLoading(false)
     }

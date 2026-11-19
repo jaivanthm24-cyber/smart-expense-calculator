@@ -9,6 +9,7 @@ import { api } from '@/services/api'
 import { Input } from '@/components/common/Input'
 import { Button } from '@/components/common/Button'
 import { Card, CardContent } from '@/components/common/Card'
+import { getErrorMessage } from '@/utils/errorHandler'
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -43,7 +44,7 @@ export const LoginPage: React.FC = () => {
       login(res.data)
       navigate('/')
     } catch (err: any) {
-      setServerError(err.response?.data?.detail || 'Invalid email or password. Please try again.')
+      setServerError(getErrorMessage(err, 'Invalid email or password. Please try again.'))
     } finally {
       setIsLoading(false)
     }

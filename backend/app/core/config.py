@@ -1,7 +1,7 @@
 import os
 from typing import List
 from pydantic_settings import BaseSettings
-from pydantic import Field
+from pydantic import Field, field_validator
 
 
 class Settings(BaseSettings):
@@ -14,6 +14,13 @@ class Settings(BaseSettings):
         default="sqlite:///./smart_expense.db",
         description="Database connection string (PostgreSQL or SQLite)",
     )
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def assemble_db_connection(cls, v: str) -> str:
+        if isinstance(v, str) and v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql://", 1)
+        return v
 
     # JWT Authentication
     SECRET_KEY: str = Field(

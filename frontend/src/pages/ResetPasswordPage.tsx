@@ -8,6 +8,7 @@ import { api } from '@/services/api'
 import { Input } from '@/components/common/Input'
 import { Button } from '@/components/common/Button'
 import { Card } from '@/components/common/Card'
+import { getErrorMessage } from '@/utils/errorHandler'
 
 const resetSchema = z
   .object({
@@ -52,7 +53,7 @@ export const ResetPasswordPage: React.FC = () => {
       setSuccess(true)
       setTimeout(() => navigate('/login'), 2500)
     } catch (err: any) {
-      setServerError(err.response?.data?.detail || 'Failed to reset password. Link may be expired.')
+      setServerError(getErrorMessage(err, 'Failed to reset password. Link may be expired.'))
     } finally {
       setIsLoading(false)
     }
