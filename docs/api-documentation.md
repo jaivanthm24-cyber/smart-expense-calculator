@@ -1,0 +1,186 @@
+# Smart Expense Calculator – REST API Documentation
+
+Base URL: `http://localhost:8000/api` (or proxied via `http://localhost:3000/api`)
+
+Interactive Swagger UI: `http://localhost:8000/api/docs`  
+ReDoc UI: `http://localhost:8000/api/redoc`
+
+---
+
+## 1. Authentication Endpoints
+
+### `POST /api/auth/register`
+Create a new user account and obtain initial tokens.
+
+**Request Body:**
+```json
+{
+  "email": "alex@example.com",
+  "password": "SecurePassword123!",
+  "full_name": "Alex Johnson",
+  "currency": "USD"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "access_token": "eyJhbGciOi...",
+  "refresh_token": "eyJhbGciOi...",
+  "token_type": "bearer",
+  "expires_in": 86400,
+  "user": {
+    "id": 1,
+    "email": "alex@example.com",
+    "full_name": "Alex Johnson",
+    "currency": "USD",
+    "is_active": true,
+    "is_verified": true,
+    "created_at": "2026-11-19T10:00:00Z",
+    "updated_at": "2026-11-19T10:00:00Z"
+  }
+}
+```
+
+### `POST /api/auth/login`
+Authenticate with email and password.
+
+### `POST /api/auth/refresh`
+Exchange a refresh token for a new access token.
+
+### `POST /api/auth/logout`
+Revoke active session tokens.
+
+### `POST /api/auth/forgot-password` & `POST /api/auth/reset-password`
+Cryptographic password reset workflow.
+
+### `GET /api/auth/me` & `PUT /api/auth/me`
+Retrieve or update the authenticated user's profile and currency.
+
+---
+
+## 2. Dashboard Endpoints
+
+### `GET /api/dashboard/summary`
+Returns top KPIs, budget utilization, 6-month historical trends, category breakdowns, and recent transactions.
+
+**Query Parameters:**
+- `preset`: `today`, `this_week`, `this_month` (default), `last_month`, `this_year`, `custom`
+- `start_date`: `YYYY-MM-DD` (optional, for custom preset)
+- `end_date`: `YYYY-MM-DD` (optional, for custom preset)
+
+**Response:**
+```json
+{
+  "total_income": "6500.00",
+  "total_expenses": "2140.50",
+  "current_balance": "4359.50",
+  "total_savings": "12500.00",
+  "monthly_spending": "2140.50",
+  "monthly_budget_utilization_pct": 53.5,
+  "savings_rate_pct": 67.1,
+  "highest_spending_category": "Rent & Housing",
+  "highest_spending_amount": "1200.00",
+  "recent_transactions": [...],
+  "income_vs_expense_chart": [...],
+  "expense_category_breakdown": [...]
+}
+```
+
+---
+
+## 3. Expense Endpoints
+
+### `GET /api/expenses/`
+List expenses with search, filtering, and pagination.
+
+**Query Parameters:**
+- `search`: Filter by title, description, or notes
+- `category_id`: Filter by integer category ID
+- `payment_method`: e.g. `Credit Card`, `Debit Card`, `Cash`, `UPI`
+- `start_date` & `end_date`: Date range
+- `sort_by`: `date`, `amount`, `title` (default: `date`)
+- `sort_order`: `desc` or `asc`
+- `page`: Page index (default: `1`)
+- `page_size`: Items per page (default: `20`, max `100`)
+
+### `POST /api/expenses/`
+Create a new expense entry.
+
+### `GET /api/expenses/{id}`
+Retrieve a single expense entry.
+
+### `PUT /api/expenses/{id}`
+Update an existing expense entry.
+
+### `DELETE /api/expenses/{id}`
+Delete an expense entry.
+
+---
+
+## 4. Income Endpoints
+
+### `GET /api/income/`
+List income streams with filters, sorting, and pagination.
+
+### `POST /api/income/`
+Record an incoming payment or salary.
+
+### `PUT /api/income/{id}` & `DELETE /api/income/{id}`
+Modify or delete an income entry.
+
+---
+
+## 5. Budget Endpoints
+
+### `GET /api/budgets/`
+Fetch budget overview for a month and year, including spent totals, remaining balances, and alert thresholds.
+
+**Query Parameters:**
+- `month`: 1 - 12 (default: current month)
+- `year`: 2000 - 2100 (default: current year)
+
+### `POST /api/budgets/`
+Set or update an overall or category-specific budget.
+
+### `DELETE /api/budgets/{id}`
+Remove a budget limit.
+
+---
+
+## 6. Savings Goals Endpoints
+
+### `GET /api/savings-goals/`
+List all user savings goals with real-time computed progress %, days remaining, and monthly targets needed.
+
+### `POST /api/savings-goals/`
+Create a new savings goal.
+
+### `PUT /api/savings-goals/{id}` & `DELETE /api/savings-goals/{id}`
+Edit or delete a savings goal.
+
+### `POST /api/savings-goals/{id}/contributions`
+Deposit savings towards a goal, updating current amount and checking milestone completion.
+
+---
+
+## 7. Analytics & Smart Insights Endpoints
+
+### `GET /api/analytics/overview`
+Returns weekly day-of-week spending patterns, average daily spend, top spending day, and period-over-period comparison deltas.
+
+### `GET /api/insights/`
+Returns the algorithmic Financial Health Score (0 - 100), automated rule-based observations, category spikes, budget alerts, and recommendations.
+
+---
+
+## 8. Report Endpoints
+
+### `GET /api/reports/period`
+Get a JSON financial statement for a chosen timeframe.
+
+### `GET /api/reports/export/csv`
+Stream an audit-ready CSV spreadsheet with Content-Disposition attachment.
+
+### `GET /api/reports/export/pdf`
+Stream a formatted PDF executive financial statement generated by ReportLab.
